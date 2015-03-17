@@ -219,6 +219,8 @@ class ChertDatabase : public Xapian::Database::Internal {
 				     chert_revision_number_t * startrev,
 				     chert_revision_number_t * endrev) const;
     public:
+
+    void readahead_for_query(const Xapian::Query &query);
 	/** Create and open a chert database.
 	 *
 	 *  @exception Xapian::DatabaseCorruptError is thrown if there is no

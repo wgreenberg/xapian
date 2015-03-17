@@ -105,6 +105,8 @@ class Database::Internal : public Xapian::Internal::intrusive_base {
 	 */
 	virtual void keep_alive();
 
+    virtual void readahead_for_query (const Xapian::Query & query);
+
 	//////////////////////////////////////////////////////////////////
 	// Database statistics:
 	// ====================

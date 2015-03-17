@@ -167,6 +167,20 @@ static inline byte *zeroed_new(size_t size)
 
 #define BYTE_PAIR_RANGE (1 << 2 * CHAR_BIT)
 
+void
+ChertTable::readahead_block(uint4 n) const
+{
+    if (rare(handle == -2))
+	ChertTable::throw_database_closed();
+
+    /* Use the base bit_map_size not the bitmap's size, because
+     * the latter is uninitialised in readonly mode.
+     */
+    Assert(n / CHAR_BIT < base.get_bit_map_size());
+
+    io_readahead_block(handle, block_size, n);
+}
+
 /// read_block(n, p) reads block n of the DB file to address p.
 void
 ChertTable::read_block(uint4 n, byte * p) const
@@ -1129,6 +1143,37 @@ ChertTable::del(const string &key)
     if (cursor_created_since_last_modification) {
 	cursor_created_since_last_modification = false;
 	++cursor_version;
+    }
+    RETURN(true);
+}
+
+bool
+ChertTable::readahead_key(const string &key)
+{
+    LOGCALL(DB, bool, "ChertTable::readahead_key", key);
+    Assert(!key.empty());
+
+    form_key(key);
+
+    const byte * p;
+    int c;
+
+    Key ktkey = kt.key();
+    for (int j = level; j > 0; --j) {
+        p = C[j].p;
+        c = find_in_block(p, ktkey, false, C[j].c);
+        C[j].c = c;
+        uint4 n = Item(p, c).block_given_by();
+        if (n != C[j].n) {
+            readahead_block(n);
+        }
+        C[j].n = n;
+    }
+    p = C[0].p;
+    c = find_in_block(p, ktkey, true, C[0].c);
+    C[0].c = c;
+    if (c < DIR_START) {
+        RETURN(false);
     }
     RETURN(true);
 }

@@ -105,6 +105,13 @@ throw_block_error(const char * s, off_t b, int e)
 }
 
 void
+io_readahead_block(int fd, size_t n, off_t b)
+{
+    off_t o = b * n;
+    posix_fadvise(fd, o, n, POSIX_FADV_WILLNEED);
+}
+
+void
 io_read_block(int fd, char * p, size_t n, off_t b)
 {
     off_t o = b * n;

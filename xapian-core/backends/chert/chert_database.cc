@@ -472,6 +472,16 @@ ChertDatabase::set_revision_number(chert_revision_number_t new_revision)
     }
 }
 
+void
+ChertDatabase::readahead_for_query(const Xapian::Query &query)
+{
+    Xapian::TermIterator t;
+    for (t = query.get_terms_begin(); t != Xapian::TermIterator(); ++t) {
+        const string & term = *t;
+        postlist_table.readahead_key(term);
+    }
+}
+
 bool
 ChertDatabase::reopen()
 {
