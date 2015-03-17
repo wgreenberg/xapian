@@ -104,6 +104,13 @@ throw_block_error(const char * s, off_t b, int e)
     throw Xapian::DatabaseError(m, e);
 }
 
+// dirty dirty hack that turns all preads into readaheads; preempts heavy disk
+// io operations
+bool IS_READAHEAD = false;
+void set_readahead(bool val) {
+    IS_READAHEAD = val;
+}
+
 void
 io_read_block(int fd, char * p, size_t n, off_t b)
 {
@@ -113,6 +120,11 @@ io_read_block(int fd, char * p, size_t n, off_t b)
     // per block read.
 #ifdef HAVE_PREAD
     while (true) {
+        if (IS_READAHEAD) {
+            // readahead has reversed order of parameters to pread, for some reason...
+            readahead(fd, o, n);
+            return;
+        }
 	ssize_t c = pread(fd, p, n, o);
 	// We should get a full read most of the time, so streamline that case.
 	if (usual(c == ssize_t(n)))

@@ -32,6 +32,7 @@
 #include "debuglog.h"
 #include "submatch.h"
 #include "localsubmatch.h"
+#include "io_utils.h"
 #include "omassert.h"
 #include "api/omenquireinternal.h"
 #include "realtime.h"
@@ -350,6 +351,15 @@ MultiMatch::MultiMatch(const Xapian::Database &db_,
     }
 
     stats.set_query(query);
+
+    set_readahead(true);
+    // readahead all the blocks we're about to read
+	for (size_t leaf = 0; leaf < leaves.size(); ++leaf) {
+		SubMatch * submatch = leaves[leaf].get();
+		submatch->prepare_match(true, stats);
+    }
+    set_readahead(false);
+
     prepare_sub_matches(leaves, errorhandler, stats);
     stats.set_bounds_from_db(db);
 }

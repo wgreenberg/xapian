@@ -47,6 +47,8 @@ inline bool io_sync(int fd)
 #endif
 }
 
+void set_readahead(bool val);
+
 inline bool io_full_sync(int fd)
 {
 #ifdef F_FULLFSYNC
