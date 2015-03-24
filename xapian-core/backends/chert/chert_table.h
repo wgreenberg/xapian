@@ -334,7 +334,7 @@ class XAPIAN_VISIBILITY_DEFAULT ChertTable {
 	 */
 	void close(bool permanent=false);
 
-    bool readahead_key(const string &key);
+    bool readahead_key(const string &key) const;
 
 	/** Determine whether the btree exists on disk.
 	 */

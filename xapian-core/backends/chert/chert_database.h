@@ -220,6 +220,7 @@ class ChertDatabase : public Xapian::Database::Internal {
 				     chert_revision_number_t * endrev) const;
     public:
 
+    void request_document(Xapian::docid /*did*/) const;
     void readahead_for_query(const Xapian::Query &query);
 	/** Create and open a chert database.
 	 *

@@ -65,6 +65,8 @@ class ChertRecordTable : public ChertTable {
 	 */
 	void replace_record(const string & data, Xapian::docid did);
 
+    void readahead_for_record(Xapian::docid did) const;
+
 	/** Delete a record from the table.
 	 */
 	void delete_record(Xapian::docid did);

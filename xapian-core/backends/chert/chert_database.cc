@@ -473,6 +473,12 @@ ChertDatabase::set_revision_number(chert_revision_number_t new_revision)
 }
 
 void
+ChertDatabase::request_document(Xapian::docid did) const
+{
+    record_table.readahead_for_record(did);
+}
+
+void
 ChertDatabase::readahead_for_query(const Xapian::Query &query)
 {
     Xapian::TermIterator t;

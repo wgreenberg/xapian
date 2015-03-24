@@ -66,6 +66,12 @@ ChertRecordTable::get_doccount() const
 }
 
 void
+ChertRecordTable::readahead_for_record(Xapian::docid did) const
+{
+    readahead_key(make_key(did));
+}
+
+void
 ChertRecordTable::replace_record(const string & data, Xapian::docid did)
 {
     LOGCALL_VOID(DB, "ChertRecordTable::replace_record", data | did);

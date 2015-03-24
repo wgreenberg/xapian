@@ -1148,7 +1148,7 @@ ChertTable::del(const string &key)
 }
 
 bool
-ChertTable::readahead_key(const string &key)
+ChertTable::readahead_key(const string &key) const
 {
     LOGCALL(DB, bool, "ChertTable::readahead_key", key);
     Assert(!key.empty());
