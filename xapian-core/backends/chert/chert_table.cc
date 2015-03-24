@@ -1159,22 +1159,14 @@ ChertTable::readahead_key(const string &key)
     int c;
 
     Key ktkey = kt.key();
-    for (int j = level; j > 0; --j) {
-        p = C[j].p;
-        c = find_in_block(p, ktkey, false, C[j].c);
-        C[j].c = c;
-        uint4 n = Item(p, c).block_given_by();
-        if (n != C[j].n) {
-            readahead_block(n);
-        }
-        C[j].n = n;
-    }
-    p = C[0].p;
-    c = find_in_block(p, ktkey, true, C[0].c);
-    C[0].c = c;
-    if (c < DIR_START) {
-        RETURN(false);
-    }
+
+    // We'll only readahead the first level, since descending the B-tree would
+    // require actual reads that would likely hurt performance more than help.
+    p = C[level].p;
+    c = find_in_block(p, ktkey, false, C[level].c);
+    uint4 n = Item(p, c).block_given_by();
+
+    readahead_block(n);
     RETURN(true);
 }
 
