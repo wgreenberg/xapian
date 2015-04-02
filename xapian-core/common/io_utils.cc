@@ -107,8 +107,10 @@ throw_block_error(const char * s, off_t b, int e)
 void
 io_readahead_block(int fd, size_t n, off_t b)
 {
+#ifdef HAVE_POSIX_FADVISE
     off_t o = b * n;
     posix_fadvise(fd, o, n, POSIX_FADV_WILLNEED);
+#endif
 }
 
 void
