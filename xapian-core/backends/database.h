@@ -32,6 +32,7 @@
 #include "xapian/intrusive_ptr.h"
 #include <xapian/types.h>
 #include <xapian/database.h>
+#include <xapian/query.h>
 #include <xapian/document.h>
 #include <xapian/positioniterator.h>
 #include <xapian/termiterator.h>
