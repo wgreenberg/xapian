@@ -1153,6 +1153,43 @@ GlassTable::del(const string &key)
     RETURN(true);
 }
 
+void
+GlassTable::readahead_block(uint4 n) const
+{
+    if (rare(handle == -2))
+	GlassTable::throw_database_closed();
+
+    /* Use the base bit_map_size not the bitmap's size, because
+     * the latter is uninitialised in readonly mode.
+     */
+    Assert(n / CHAR_BIT < base.get_bit_map_size());
+
+    io_readahead_block(handle, block_size, n);
+}
+
+bool
+GlassTable::readahead_key(const string &key) const
+{
+    LOGCALL(DB, bool, "GlassTable::readahead_key", key);
+    Assert(!key.empty());
+
+    form_key(key);
+
+    const byte * p;
+    int c;
+
+    Key ktkey = kt.key();
+
+    // We'll only readahead the first level, since descending the B-tree would
+    // require actual reads that would likely hurt performance more than help.
+    p = C[level].get_p();
+    c = find_in_block(p, ktkey, false, C[level].c);
+    uint4 n = Item(p, c).block_given_by();
+
+    readahead_block(n);
+    RETURN(true);
+}
+
 bool
 GlassTable::get_exact_entry(const string &key, string & tag) const
 {

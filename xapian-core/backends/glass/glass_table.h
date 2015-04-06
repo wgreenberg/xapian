@@ -346,6 +346,8 @@ class GlassTable {
 	 */
 	void close(bool permanent=false);
 
+    bool readahead_key(const string &key) const;
+
 	/** Determine whether the btree exists on disk.
 	 */
 	bool exists() const;
@@ -604,6 +606,7 @@ class GlassTable {
 	bool find(Glass::Cursor *) const;
 	int delete_kt();
 	void read_block(uint4 n, byte *p) const;
+    void readahead_block(uint4 n) const;
 	void write_block(uint4 n, const byte *p, bool appending = false) const;
 	XAPIAN_NORETURN(void set_overwritten() const);
 	void block_to_cursor(Glass::Cursor *C_, int j, uint4 n) const;
