@@ -54,7 +54,6 @@ void
 Database::Internal::readahead_for_query (const Xapian::Query & query)
 {
     (void)query;
-    throw Xapian::UnimplementedError("This backend doesn't support readaheads");
 }
 
 Xapian::doccount
