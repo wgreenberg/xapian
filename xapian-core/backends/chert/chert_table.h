@@ -334,7 +334,7 @@ class XAPIAN_VISIBILITY_DEFAULT ChertTable {
 	 */
 	void close(bool permanent=false);
 
-    bool readahead_key(const string &key) const;
+	bool readahead_key(const string &key) const;
 
 	/** Determine whether the btree exists on disk.
 	 */
@@ -629,7 +629,7 @@ class XAPIAN_VISIBILITY_DEFAULT ChertTable {
 	bool find(Cursor *) const;
 	int delete_kt();
 	void read_block(uint4 n, byte *p) const;
-    void readahead_block(uint4 n) const;
+	void readahead_block(uint4 n) const;
 	void write_block(uint4 n, const byte *p) const;
 	XAPIAN_NORETURN(void set_overwritten() const);
 	void block_to_cursor(Cursor *C_, int j, uint4 n) const;

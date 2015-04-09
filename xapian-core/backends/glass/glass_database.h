@@ -207,9 +207,6 @@ class GlassDatabase : public Xapian::Database::Internal {
 				     glass_revision_number_t * endrev) const;
 
     public:
-
-    void request_document(Xapian::docid /*did*/) const;
-    void readahead_for_query(const Xapian::Query &query);
 	/** Create and open a glass database.
 	 *
 	 *  @exception Xapian::DatabaseCorruptError is thrown if a problem is
@@ -289,6 +286,9 @@ class GlassDatabase : public Xapian::Database::Internal {
 				    Xapian::ReplicationInfo * info);
 	string get_revision_info() const;
 	string get_uuid() const;
+
+	void request_document(Xapian::docid /*did*/) const;
+	void readahead_for_query(const Xapian::Query &query);
 	//@}
 
 	XAPIAN_NORETURN(void throw_termlist_table_close_exception() const);
